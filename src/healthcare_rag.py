@@ -130,5 +130,31 @@ class HealthcareRag:
 
 		return answer, latency
 
-	def query(self,):
-		pass
+	def query(self, question: str) -> Dict:
+		if not self.patients_loaded:
+            return {
+                "answer": "Error: No patient data loaded. Please load patient records first.",
+                "latency_ms": 0,
+                "sources": []
+            }
+
+        results, search_latency = self.search(question)
+
+        answer, gen_latency = self.generate_answer(question, results)
+
+        sources = []
+        for result in results:
+            sources.append({
+                "patient_id": result.payload["patient_id"],
+                "score": round(result.score, 3),
+                "summary": result.payload["text"][:200] + "..."
+            })
+
+        return {
+            "answer": answer,
+            "latency_ms": round(search_latency + gen_latency, 2),
+            "search_latency_ms": round(search_latency, 2),
+            "generation_latency_ms": round(gen_latency, 2),
+            "sources": sources
+        }
+		
