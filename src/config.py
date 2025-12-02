@@ -9,7 +9,7 @@ class Config(BaseModel):
     groq_api_key: str = os.getenv("GROQ_API_KEY", "")
     
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
-    llm_model: str = "mixtral-8x7b-32768"
+    llm_model: str = "llama-3.3-70b-versatile"
     
     collection_name: str = "patient_records"
     vector_size: int = 384  
